@@ -1,0 +1,48 @@
+These are a few examples of hiding certain code-paths from somebody trying to
+reverse-engineer a 32- or 64-bit x86 binary via a debugger and/or disassembler.
+
+I read about this in some article many moons ago. Could have been some DefCon-,
+BlackHat- or ChaosComputerCongress-material. While it does not make it
+impossible to reverse-engineer the binary, it at least makes it a bit more
+difficult.
+
+The dependencies are modest:
+
+ * cmake 2.8.12
+ * nasm 2.11.08
+ * gdb 7.11
+
+I compiles and runs under recent Linux-distributions (e.g. Ubuntu 16.04). It
+probably also works on recent intel-based MacOS machines, but I've not tested
+it, since I was too lazy to figure out the system-call vectors. But the general
+principle should apply there too.
+
+How to try it out:
+
+ 1> make
+ 1> ./anti-debug
+ No on is looking
+ 1> gdb ./anti-debug
+ (gdb) run
+ Starting program: /home/user/src/asm-anti-debug/anti-debug
+ I'm being debugged
+ [Inferior 1 (process 3266) exited normally]
+ (gdb) quit
+
+If you want to be able to step through the stripped binary with gdb use
+the provided make-target "info" to obtain the starting address of the
+code/text-section of the different example binaries.
+
+ 1> gdb ./anti-debug
+ (gdb) tui enable
+ (gdb) tui reg general
+ (gdb) break *0x00400060
+ Breakpoint 1 at 0x400060
+ (gdb) run
+ Starting program: /home/user/src/asm-anti-debug/anti-debug
+ Breakpoint 1, 0x00400060 in ?? ()
+ (gdb) nexti
+ ...
+
+Feedback and patches are welcome.
+
