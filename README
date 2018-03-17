@@ -8,7 +8,7 @@ difficult.
 
 The dependencies are modest:
 
- * cmake 2.8.12
+ * make 4.11
  * nasm 2.11.08
  * gdb 7.11
 
